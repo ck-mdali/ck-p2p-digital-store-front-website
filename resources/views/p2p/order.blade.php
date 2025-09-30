@@ -37,7 +37,7 @@
         $breadcrumbItems = [
             ['label' => 'Home', 'url' => url('/')],
             ['label' => 'P2P', 'url' => url('/products')],
-            ['label' => 'Peer to Peer Order'],
+            ['label' => 'Person to Person Order'],
         ];
         $downloadLink = url('/download/sample-file.pdf'); // Example download URL
     @endphp
@@ -92,6 +92,7 @@
                 @endif
 
                 @if($user->role == 'user')
+                    
                     <!-- Order Status -->
                     @switch($order->status)
                         @case('new')
@@ -205,7 +206,15 @@
                                         </tr>
                                         <tr>
                                             <td class="px-4 py-2 border-b">Payment Mode</td>
-                                            <td class="px-4 py-2 border-b text-gray-500">{{ $order->paymentType->name }}</td>
+                                            <td class="px-4 py-2 border-b text-gray-500">
+                                                @if($order->product->free)
+                                                    Free Product
+                                                @else 
+                                                 {{ $order->paymentType->name }}
+                                                @endif
+                                               
+
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="px-4 py-2 border-b">Date and Time</td>
@@ -460,8 +469,8 @@
                     <div class="bg-white p-4 rounded-lg shadow-sm">
                         <h4 class="text-lg font-medium text-gray-700">What is P2P?</h4>
                         <p class="text-gray-500 mt-2">
-                            P2P (Peer-to-Peer) is a manual online purchase between individuals. It allows users to interact directly with each other in a secure environment. 
-                            During a P2P transaction, you will receive live support via a chatbox, where a real human will guide you through the process and assist with any questions you may have.
+                            P2P (Person-to-Person) is a manual online purchase between individuals. It allows users to interact directly with each other in a secure environment. 
+                            During a P2P transaction, you will receive live support via a chatbox, where a real human (Admin) will guide you through the process and assist with any questions you may have regarding the product.
                         </p>
                     </div>
                 </div>
@@ -486,6 +495,7 @@
         let isFirstLoad = true;
         let lastMessageCount = 0;
         let originalTitle = document.title;
+        let if_free = '{{ $order->product->free }}';
        
         // Fetch and render chat messages
         function fetchMessages() {
@@ -504,10 +514,18 @@
                     let newIncoming = false;
 
                     // If it's the first time loading, insert the instruction message
-                    if (isFirstLoad) {
+                    if (isFirstLoad && if_free == 0) {
                         let instructionMessage = `<div class="message other">
-                            Please pay ₹{{ number_format($order->amount_inr, 2) }} or ${{ number_format($order->amount_usd, 2) }} to any of the given payment modes so you can download the file.
+                            Hey, Please pay ₹{{ number_format($order->amount_inr, 2) }} UPI <br> or ${{ number_format($order->amount_usd, 2) }} USDT Crypto so I can verify the purchase and enable download link.
                             <div class="timestamp">--</div>
+                        </div>`;
+                        chatMessages.append(instructionMessage); // Add the instruction message
+                        isFirstLoad = true; // Set the flag to false after the first load
+                    }
+                    if( if_free == 1){
+                        let instructionMessage = `<div class="message other">
+                            Hey, it is free product, you can download.
+                            
                         </div>`;
                         chatMessages.append(instructionMessage); // Add the instruction message
                         isFirstLoad = true; // Set the flag to false after the first load

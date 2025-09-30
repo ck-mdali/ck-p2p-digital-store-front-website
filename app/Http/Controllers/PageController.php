@@ -56,4 +56,15 @@ class PageController extends Controller
             
     }
 
+
+    public function staticAbout()
+    {
+        return view('pages.about');
+    }
+
+    public function staticContact()
+    {
+        return view('pages.contact');
+    }
+
 }

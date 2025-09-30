@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Comment;
+use App\Models\Order;
 
 class ProductController extends Controller
 {
@@ -77,9 +78,20 @@ class ProductController extends Controller
                            ->with('replies.user', 'user')
                            ->latest()
                            ->paginate(6);
+        $user = auth()->user();
+
+        // check if user has already a completed order for this product
+        if ($user) {
+            $purchased = Order::where('user_id', $user->id)
+                                    ->where('product_id', $product->id)
+                                    ->whereIn('status', ['new', 'pending', 'completed']) // Adjust statuses as needed
+                                    ->exists();
+        } else {
+            $purchased = false;
+        }
 
         // Return the product view with the product data.
-        return view('products.show', compact('product', 'comments'));
+        return view('products.show', compact('product', 'comments', 'user', 'purchased'));
     }
 
     public function archiveCategory($category_slug, Request $request)

@@ -74,8 +74,20 @@ class P2pController extends Controller
             return redirect()->route('page.404');
         }
 
+        if(Auth::check()){
+             // check if user already has an active order for this product
+            $existingOrder = Order::where('user_id', Auth::id())
+                                ->where('product_id', $product->id)
+                                ->whereIn('status', ['new', 'pending', 'completed']) // Adjust statuses as needed
+                                ->first();
+            if ($existingOrder) {
+                return redirect()->route('p2p.order', ['id' => $existingOrder->id])
+                                ->with('info', 'You already have an active order for this product.');
+            }
+        }
+
         // Get payment types (you can customize this query as per your need)
-        $paymentTypes = PaymentType::where('status', 'active')->get();
+        $paymentTypes = [];
 
         return view('p2p.checkout', compact('product', 'paymentTypes'));
     }
@@ -108,6 +120,16 @@ class P2pController extends Controller
             return redirect()->route('login')->with('error', 'You need to be logged in to place an order.');
         }
 
+        // check if user already has an active order for this product
+            $existingOrder = Order::where('user_id', Auth::id())
+                                ->where('product_id', $product_id)
+                                ->whereIn('status', ['new', 'pending', 'completed']) // Adjust statuses as needed
+                                ->first();
+            if ($existingOrder) {
+                return redirect()->route('p2p.order', ['id' => $existingOrder->id])
+                                ->with('info', 'You already have an active order for this product.');
+            }
+
         // Get the payment type
         // $paymentType = PaymentType::find($request->payment_type_id);
 
@@ -115,14 +137,26 @@ class P2pController extends Controller
         $order = new Order();
         $order->user_id = Auth::id();
         $order->product_id = $product->id;
-        $order->status = 'new'; // The order is "new" initially
+
+        if($product->free){
+            $order->status = 'completed'; // If the product is free, mark the order as completed
+            $order->admin_read = 1;
+        } else {
+            $order->status = 'new'; // The order is "new" initially
+        }
+
+        // $order->status = 'new'; // The order is "new" initially
         $order->amount_usd = $product->price_usd; // Assuming the product has these fields
         $order->amount_inr = $product->price_inr;
         // $order->payment_type_id = 1;
         $order->notes = $request->notes; // Optional: Allow users to add notes (can be null)
         $order->save();
 
-        Mail::to(Auth::user()->email)->send(new OrderPlacedMail($order));
+        // Mail::to(Auth::user()->email)->send(new OrderPlacedMail($order));
+        Mail::to(Auth::user()->email)
+        ->cc(['help@cksoftwares.com', 'mdali@cksoftwares.com']) // Can be an array or single email
+        // ->bcc(['']) // Optional
+        ->send(new OrderPlacedMail($order));
 
         // Redirect to the P2P order page with the order ID
         return redirect()->route('p2p.order', ['id' => $order->id])
@@ -139,17 +173,25 @@ class P2pController extends Controller
     {
         // Find the order by ID
         $order = Order::find($id);
+        if(!$order){
+             return redirect()->route('404');
+        }
 
         $user = Auth::user();
-
         // If the order doesn't exist or doesn't belong to the authenticated user, redirect to 404
-         if ($user->id !== $order->user_id && $user->role !== 'admin') {
-            return route('login');
+        if ($user->id !== $order->user_id && $user->role !== 'admin') {
+            // return route('login');
+            return redirect()->route('404');
         }
 
         // update admin has saw the order
         if($user->role == 'admin' && $order->admin_read == 0){
             $order->admin_read = 1;
+            $order->save();
+        }
+
+        if($order->product->free){
+            $order->status = 'completed'; // If the product is free, mark the order as completed
             $order->save();
         }
 
@@ -173,7 +215,7 @@ class P2pController extends Controller
 
         // Ensure the order belongs to the authenticated user
         if ($order->user_id != Auth::id()) {
-            return redirect()->route('page.404');
+            return redirect()->route('404');
         }
 
         // Update the order status
@@ -181,7 +223,8 @@ class P2pController extends Controller
         $order->payment_type_id = $request->payment_mode;
         $order->save();
 
-        Mail::to(Auth::user()->email)->send(new OrderMarkedPaidMail($order));
+        Mail::to(Auth::user()->email)
+        ->cc(['help@cksoftwares.com', 'mdali@cksoftwares.com']) ->send(new OrderMarkedPaidMail($order));
 
         return redirect()->route('p2p.order', ['id' => $order->id])
                          ->with('success', 'Order Marked as Paid!');
@@ -287,7 +330,6 @@ class P2pController extends Controller
 
         $orders = Order::with('user', 'product')->orderBy('created_at', 'desc')->paginate(26);
         return view('admin.console', compact('orders'));
-
     }
 
     public function adminMarkOrder(Request $request)

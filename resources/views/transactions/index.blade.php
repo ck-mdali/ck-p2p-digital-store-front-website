@@ -82,7 +82,7 @@
                                         {{ ucfirst($transaction->status) }}
                                     </span>
                                 </td>
-                                <td class="p-4 text-sm">{{ $transaction->created_at->toDateString() }}</td>
+                                <td class="p-4 text-sm">{{ $transaction->created_at->diffForHumans() }}</td>
                                 <td class="p-4 text-sm flex gap-3">
                                     <a href="{{ route('p2p.order', $transaction->order->id) }}" 
                                        class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold text-center hover:bg-indigo-700 transition duration-200">

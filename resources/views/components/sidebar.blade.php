@@ -53,7 +53,7 @@
       <i class="fas fa-headset"></i>
       <span>Contact & Support</span>
     </a>
-    <a href="{{ url('/policies') }}" class="flex items-center space-x-2 block px-4 py-2 rounded-md hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 transition"
+    <!-- <a href="{{ url('/policies') }}" class="flex items-center space-x-2 block px-4 py-2 rounded-md hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 transition"
        :class="{'bg-indigo-100 text-indigo-600': window.location.pathname === '/policies' }">
       <i class="fas fa-shield-alt"></i>
       <span>Policies</span>
@@ -62,7 +62,7 @@
        :class="{'bg-indigo-100 text-indigo-600': window.location.pathname === '/disclaimer' }">
       <i class="fas fa-shield-alt"></i>
       <span>Disclaimer</span>
-    </a>
+    </a> -->
 
     @php
       $user = Auth::user();
@@ -74,7 +74,7 @@
     @if($user->role == 'admin')
     <a href="{{ route('admin.console') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
-       :class="{'bg-indigo-500 text-indigo-100': window.location.pathname === '/admin/console'}">
+       :class="{'bg-indigo-300 text-indigo-900': window.location.pathname === '/admin/console'}">
         <i class="fas fa-user text-indigo-500 w-5 text-center"></i>
         <span>Admin Console</span>
     </a>
@@ -82,38 +82,38 @@
 
     <a href="{{ route('profile.edit') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
-       :class="{'bg-indigo-500 text-indigo-100': window.location.pathname === '/profile'}">
+       :class="{'bg-indigo-300 text-indigo-900': window.location.pathname === '/profile'}">
         <i class="fas fa-user text-indigo-500 w-5 text-center"></i>
         <span>My Profile</span>
     </a>
 
     <a href="{{ route('p2p.index') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
-       :class="{ 'bg-indigo-500 text-white': window.location.pathname.startsWith('/p2p') }">
+       :class="{ 'bg-indigo-300 text-indigo-900': window.location.pathname.startsWith('/p2p') }">
         <i class="fas fa-box-open text-indigo-500 w-5 text-center"></i>
         <span>My Orders</span>
     </a>
 
     <a href="{{ route('transactions.index') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
-       :class="{'bg-indigo-500 text-indigo-100': window.location.pathname === '/transactions'}">
+       :class="{'bg-indigo-300 text-indigo-900': window.location.pathname === '/transactions'}">
         <i class="fas fa-credit-card text-indigo-500 w-5 text-center"></i>
         <span>My Transactions</span>
     </a>
 
     <a href="{{ route('downloads.index') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
-       :class="{'bg-indigo-500 text-indigo-100': window.location.pathname === '/my-downloads'}">
+       :class="{'bg-indigo-300 text-indigo-900': window.location.pathname === '/my-downloads'}">
         <i class="fas fa-download text-indigo-500 w-5 text-center"></i>
         <span>My Downloads</span>
     </a>
 
-    <a href="{{ url('profile/settings') }}"
+    <!-- <a href="{{ url('profile/settings') }}"
        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-indigo-100 text-gray-700 hover:text-indigo-600 transition"
        :class="{'bg-indigo-500 text-indigo-100': window.location.pathname === '/settings'}">
         <i class="fas fa-cogs text-indigo-500 w-5 text-center"></i>
         <span>Settings</span>
-    </a>
+    </a> -->
 
     <form method="POST" action="{{ route('logout') }}">
         @csrf

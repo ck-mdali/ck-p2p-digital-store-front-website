@@ -74,10 +74,37 @@
         </div>
     @endisset
     {{ $slot }}
+
+
+
+
+<!-- Footer -->
+<footer class="mt-16 bg-gradient-to-br from-gray-100 to-white">
+    <div class="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row md:items-center justify-between text-sm text-gray-600 gap-4">
+        
+        <!-- Left Side: Copyright -->
+        <div>
+            <h4 class="text-base font-semibold text-gray-800">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</h4>
+            <p class="text-gray-500">Built with ❤️ for creators & businesses worldwide.</p>
+        </div>
+
+        <!-- Right Side: Links (stack on mobile, inline on desktop) -->
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:gap-6 text-sm text-gray-700">
+    <a href="/policies" class="hover:underline text-dark-600">Policies</a>
+    <a href="/terms-and-conditions" class="hover:underline text-dark-600">Terms & Conditions</a>
+    <a href="/disclaimer" class="hover:underline text-dark-600">Disclaimer</a>
+    <a href="tel:+917997807419" class="text-indigo-600 hover:underline">📞 +91 799 780 7419</a>
+</div>
+
+    </div>
+</footer>
+
+
 </main>
 
     </div>
 </div>
+
 
 </body>
 </html>

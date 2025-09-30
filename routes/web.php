@@ -65,6 +65,8 @@ Route::get('/products/{category}/{slug}', [ProductController::class, 'show'])->n
 Route::get('/freelancers', [FreelancerController::class, 'index'])->name('freelancers.index');
 Route::get('/freelancers/{freelancer}', [FreelancerController::class, 'show'])->name('freelancers.show');
 
+Route::get('/about', [PageController::class, 'staticAbout'])->name('static.pages.about');
+Route::get('/contact', [PageController::class, 'staticContact'])->name('static.pages.contact');
 require __DIR__.'/auth.php';
 
 // Page

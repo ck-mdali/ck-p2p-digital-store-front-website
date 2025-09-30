@@ -66,7 +66,6 @@
     </div>
 </div>
 
-
             </div>
 
             {{-- Product Info --}}
@@ -74,15 +73,20 @@
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ $product->name }}</h1>
 
                 <div class="flex items-center justify-between mb-4">
-                    <span class="text-2xl font-semibold text-green-600">${{ number_format($product->price_usd, 2) }}</span>
+                    <div>
+                        <span title="USDT Tether" class="text-2xl font-semibold text-green-600">${{ number_format($product->price_usd, 2) }} <small class="text-yellow-400">USDT Crypto</small></span>
+                        <br>
+                    <span title="Indian Rupee" class="text-2xl font-semibold text-green-600">₹{{ number_format($product->price_usd, 2) }} <small class="text-yellow-400 ">INR</small></span>
+                    </div>
+
                     <div class="flex items-center space-x-1 text-yellow-500">
                         {{-- Dynamic star ratings --}}
                         @for ($i = 0; $i < 5; $i++)
                             <x-heroicon-s-star class="w-5 h-5 {{ $i < $product->rating ? 'text-yellow-500' : 'text-gray-300' }}" />
                         @endfor
-<span class="ml-2 text-sm text-gray-500">
-    ({{ $product->reviews && $product->reviews->isNotEmpty() ? $product->reviews->count() : 'No' }} Reviews)
-</span>
+                        <span class="ml-2 text-sm text-gray-500">
+                            ({{ $product->reviews && $product->reviews->isNotEmpty() ? $product->reviews->count() : 'No' }} Reviews)
+                        </span>
 
                     </div>
                 </div>
@@ -93,7 +97,19 @@
                         href="{{ route('p2p.view', ['id' => $product->id]) }}"
                         class="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition"
                     >
-                        Get Now
+
+                        
+                        @if($product->free)
+                            Download Free
+                        @else 
+                            @if($purchased)
+                                Purchase Exist, Go to Order
+                            @else
+                                Buy Now
+                            @endif
+                            
+                        @endif
+
                     </a>
 
                     <a
@@ -105,7 +121,7 @@
                         Live Demo
                     </a>
 
-                    <a href="#" class="text-sm text-red-600 hover:underline">Report</a>
+                    <a href="{{ url('/contact') }}" class="text-sm text-red-600 hover:underline">Report</a>
                 </div>
 
                 {{-- Divider --}}
@@ -183,7 +199,12 @@
                             <span class="text-sm font-semibold text-gray-400"> {{ $review->user->name }}</span>
                             <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
                         </div>
-                        <p class="text-sm text-gray-600 mb-2">{{ $review->content }}</p>
+                        <p class="text-sm text-gray-600 mb-2">
+                            @if($user && $user->role == 'admin')
+                                <span># {{ $review->id }}</span> -
+                            @endif
+                            {{ $review->content }}
+                        </p>
 
                         {{-- Replies --}}
                         @foreach($review->replies as $reply)

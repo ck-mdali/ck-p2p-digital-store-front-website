@@ -75,6 +75,7 @@
                     </div>
                 @endauth
 
+                @if($product->free == 0)
                 <!-- P2P Payment Experience -->
                 <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-md text-sm text-yellow-800">
                     ✨ You're about to experience a fast and personalized payment method called <strong>P2P (Peer-to-Peer)</strong>.
@@ -86,7 +87,9 @@
                     </ul>
                     This approach is secure, flexible, and puts you in direct contact with the seller.
                 </div>
+                @endif
 
+                @if($product->free == 0)
                 <!-- Live Chat & Instant Support -->
                 <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-md text-sm text-indigo-800">
                     💬 <strong>Author is Online Now!</strong> — As soon as you place the order, a chat window will open where you can:
@@ -97,6 +100,7 @@
                     </ul>
                     No waiting. No bots. Just real-time human help!
                 </div>
+                @endif
 
                 <!-- Terms and Confirm -->
                 @auth
@@ -115,7 +119,12 @@
                         <div class="pt-2">
                             <button type="submit"
                             class="w-full inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-md text-center transition">
-                            Proceed to P2P
+                            @if($product->free)
+                                Proceed to Download
+                            @else
+                                Proceed to P2P Payment
+                            @endif
+                            
                             </button>
                         </div>
                     </form>

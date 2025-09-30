@@ -71,7 +71,7 @@
                         <x-product-card
                             title="{{ $product->name }}"
                             description="{{ $product->description_lt ?? 'No description available' }}"
-                            price_usd="${{ number_format($product->price_usd, 2) }}"
+                            price_usd="${{ number_format($product->price_usd, 2) }} USDT"
                             price_inr="₹{{ number_format($product->price_inr, 2) }}"
                             stars="{{ $product->stars ?? 4.5 }}"
                             image="{{ $product->screenshots[0] ?? 'https://via.placeholder.com/400x250.png?text=No+Image+Available' }}"

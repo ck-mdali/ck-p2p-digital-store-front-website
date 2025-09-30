@@ -81,7 +81,7 @@
                                         {{ ucfirst($order->status) }}
                                     </span>
                             </td>
-                            <td class="p-3 text-sm text-gray-700">{{ $order->created_at->toDateString() }}</td>
+                            <td class="p-3 text-sm text-gray-700">{{ $order->created_at->diffForHumans() }}</td>
                             <td class="p-3 text-sm text-gray-700 flex gap-3">
                                 <a href="{{ route('p2p.order', $order->id) }}" 
                                    class="text-green-600 hover:text-green-900 font-semibold">View</a>
